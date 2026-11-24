@@ -1,0 +1,18 @@
+[Unit]
+Description=1c-analytics FastAPI backend
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/1c_analytics
+EnvironmentFile=/opt/1c_analytics/.env
+ExecStart=/opt/1c_analytics/.venv/bin/uvicorn api.main:app --host 0.0.0.0 --port 8000 --log-level info
+Restart=always
+RestartSec=3
+User=root
+StandardOutput=append:/var/log/onec-api.log
+StandardError=append:/var/log/onec-api.log
+
+[Install]
+WantedBy=multi-user.target

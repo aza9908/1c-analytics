@@ -1,0 +1,24 @@
+# 1c-analytics ETL — нативный режим (заменяет Airflow DAGs).
+# Логи: /opt/1c_analytics/airflow/logs/<entity>.log
+#
+# TZ ниже означает: все cron-расписания трактуются по Asia/Almaty (UTC+5).
+# Все loader'ы — ЕЖЕЧАСНО, разнесены по минутам чтобы не наступать
+# друг на друга и серверу 1C было полегче.
+
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+TZ=Asia/Almaty
+RUNNER=/opt/1c_analytics/scripts/run_loader.sh
+
+# ── transactional (инкрементальные) ──────────────────
+ 5 * * * * $RUNNER receipts        # чеки ККМ
+15 * * * * $RUNNER sales           # реализации (опт)
+
+# ── catalogs (full refresh) ──────────────────────────
+20 * * * * $RUNNER inventory       # остатки на складах
+25 * * * * $RUNNER products        # номенклатура (~16k)
+30 * * * * $RUNNER stores          # склады
+
+# ── cost layer (тяжёлое, в конце часа) ───────────────
+40 * * * * $RUNNER analytics_keys  # ~30k ключей аналитики
+50 * * * * $RUNNER cost_balance    # ~34k партий себестоимости

@@ -1,0 +1,18 @@
+[Unit]
+Description=1c-analytics Next.js frontend
+After=network.target onec-api.service
+Wants=onec-api.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/1c_analytics
+EnvironmentFile=/opt/1c_analytics/.env.local
+ExecStart=/usr/bin/npm run start -- -p 3000
+Restart=always
+RestartSec=3
+User=root
+StandardOutput=append:/var/log/onec-web.log
+StandardError=append:/var/log/onec-web.log
+
+[Install]
+WantedBy=multi-user.target

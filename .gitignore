@@ -1,0 +1,34 @@
+# env / secrets
+.env
+.env*.local
+
+# python
+*.pyc
+__pycache__/
+.venv/
+
+# airflow
+airflow/logs/*
+!airflow/logs/.gitkeep
+airflow/plugins/__pycache__/
+
+# editor / IDE
+.DS_Store
+.idea/
+.vscode/
+.claude/
+
+# postgres volume (docker)
+postgres-data/
+
+# Next.js / Vercel build artefacts (живут в корне репо)
+node_modules/
+.next/
+.vercel/
+out/
+build/
+dist/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+Thumbs.db
